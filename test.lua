@@ -1,6 +1,6 @@
 if not _G.config then
     _G.config = {
-        disconnect = {30}
+        disconnect = {30} -- Thời gian đứng yên trước khi ngắt kết nối (giây)
     }
 end
 
@@ -23,6 +23,19 @@ timerLabel.BackgroundTransparency = 0.5
 timerLabel.TextColor3 = Color3.new(1, 1, 1)
 timerLabel.Text = "0"
 
+local lobbyStatusLabel = Instance.new("TextLabel")
+lobbyStatusLabel.Parent = screenGui
+lobbyStatusLabel.Position = UDim2.new(0.5, 0, 0.6, 0)
+lobbyStatusLabel.Size = UDim2.new(0, 200, 0, 30)
+lobbyStatusLabel.BackgroundTransparency = 0.5
+lobbyStatusLabel.TextColor3 = Color3.new(1, 1, 1)
+lobbyStatusLabel.Text = "Lobby: false" 
+
+
+local function isInLobby()
+    return workspace:FindFirstChild("Lobby") ~= nil
+end
+
 game:GetService("RunService").Heartbeat:Connect(function()
     local currentPosition = LocalPlayer.Character.HumanoidRootPart.Position
     if (currentPosition - lastPosition).Magnitude < 0.1 then 
@@ -34,7 +47,9 @@ game:GetService("RunService").Heartbeat:Connect(function()
 
     timerLabel.Text = string.format("Đứng yên: %.1f giây", stationaryTime)
 
-   if stationaryTime >= _G.config.disconnect[1] and _G.config.enabled then 
-    game:Shutdown() 
-end
+    lobbyStatusLabel.Text = "Lobby: " .. tostring(isInLobby())
+
+    if stationaryTime >= _G.config.disconnect[1] and isInLobby() then 
+        game:Shutdown() 
+    end
 end)
