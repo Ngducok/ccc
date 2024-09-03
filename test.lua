@@ -34,7 +34,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 
     timerLabel.Text = string.format("Đứng yên: %.1f giây", stationaryTime)
 
-    if stationaryTime >= _G.config.disconnect[1] then 
-        game:Shutdown() 
-    end
+   if stationaryTime >= _G.config.disconnect[1] and _G.config.enabled then 
+    game:Shutdown() 
+end
 end)
